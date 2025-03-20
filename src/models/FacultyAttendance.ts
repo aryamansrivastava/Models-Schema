@@ -1,9 +1,33 @@
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
 import { sequelize } from "../config/database";
-import Faculty from "./Faculty";
 import Course from "./Course";
 
-class FacultyAttendance extends Model {}
+enum AttendanceStatus {
+  PRESENT = "Present",
+  ABSENT = "Absent",
+  LEAVE = "Leave",
+}
+
+class FacultyAttendance extends Model<
+  InferAttributes<FacultyAttendance>,
+  InferCreationAttributes<FacultyAttendance>
+> {
+  declare id: number;
+  declare faculty_id: number;
+  declare course_id: number;
+  declare date: Date;
+  declare status: AttendanceStatus;
+
+  static associate(models: any) {
+    FacultyAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id" });
+FacultyAttendance.hasMany(models.Course, { foreignKey: "course_id" });
+  }
+}
 
 FacultyAttendance.init(
   {
@@ -16,7 +40,9 @@ FacultyAttendance.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Faculty,
+        model: {
+          tableName: 'Faculty'
+        },
         key: "id",
       },
       onDelete: "CASCADE", 
@@ -33,12 +59,9 @@ FacultyAttendance.init(
       onUpdate: "CASCADE",
     },
     date: DataTypes.DATE,
-    status: DataTypes.ENUM("Present", "Absent"),
+    status: DataTypes.ENUM(...Object.values(AttendanceStatus)),
   },
   { sequelize, modelName: "FacultyAttendance", tableName: "FacultyAttendances"}
 );
-
-FacultyAttendance.belongsTo(Faculty, {foreignKey: "faculty_id"});
-FacultyAttendance.belongsTo(Course, {foreignKey: "course_id"});
 
 export default FacultyAttendance;

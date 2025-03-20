@@ -1,39 +1,60 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../config/database";
-// import Department from "./Department";
-import Course from "./Course";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
+  import { sequelize } from "../config/database";
+  import Course from "./Course";
 
-class Student extends Model {}
+  class Student extends Model<
+  InferAttributes<Student>,
+  InferCreationAttributes<Student>
+> {
+  declare id: number;
+  declare course_id: number;
+  declare name: string;
+  declare email: string;
+  declare semester: Date;
+  declare cgpa: number;
 
-Student.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement:true,
-    },
-    course_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Course,
-        key: "id",
+  static associate(models: any) {
+    Student.belongsTo(models.Course, {foreignKey: "course_id"});
+    Student.belongsTo(models.Result, { foreignKey: "student_id" });
+    Student.hasMany(models.StudentAttendance, { foreignKey: "student_id" });
+  }
+}
+
+  Student.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement:true,
       },
-      onDelete:"CASCADE",
-      onUpdate:"CASCADE",
+      course_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: Course,
+          key: "id",
+        },
+        onDelete:"CASCADE",
+        onUpdate:"CASCADE",
+      },
+      name: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      semester: DataTypes.STRING,
+      cgpa: {
+        type: DataTypes.DECIMAL(3, 2),
+        allowNull: false,
+      },
     },
-    name: DataTypes.STRING,
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    },
-    semester: DataTypes.STRING,
-    cgpa: DataTypes.DECIMAL,
-  },
-  {sequelize, modelName: "Student", tableName: "Students"}
-);
+    {sequelize, modelName: "Student", tableName: "Students"}
+  );
 
-Student.belongsTo(Course, { foreignKey: "course_id" });
-
-export default Student;
+  export default Student;

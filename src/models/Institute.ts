@@ -1,9 +1,29 @@
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
 import { sequelize } from "../config/database";
-import Course from "./Course";
-import Student from "./Student";
 
-class Institute extends Model {}
+class Institute extends Model<
+  InferAttributes<Institute>,
+  InferCreationAttributes<Institute>
+> {
+  declare id: number;
+  declare name: string;
+  declare email: string;
+  declare address: Text;
+  declare website: string;
+  declare contact_No: string;
+  declare affiliation: string;
+  declare established: Date;
+
+  static associate(models: any) {
+    Institute.hasMany(models.Course, { foreignKey: "institute_id" });
+    Institute.hasMany(models.Faculty, { foreignKey: "institute_id" });
+  }
+}
 
 Institute.init(
   {
@@ -12,33 +32,13 @@ Institute.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    // student_id: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false,
-    //     references: {
-    //       model: Student,
-    //       key: "id",
-    //     },
-    //     onDelete: "CASCADE",
-    //     onUpdate: "CASCADE",
-    //   },
-      // course_id: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: false,
-      //   references: {
-      //     model: Course,
-      //     key: "id",
-      //   },
-      //   onDelete: "CASCADE",
-      //   onUpdate: "CASCADE",
-      // },
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
     address: DataTypes.TEXT,
-    website: DataTypes.STRING ,
+    website: DataTypes.STRING,
     contact_No: DataTypes.STRING,
-    affiliation: DataTypes.STRING ,
-    established: DataTypes.DATE ,
+    affiliation: DataTypes.STRING,
+    established: DataTypes.DATE,
   },
   {
     sequelize,
@@ -47,8 +47,5 @@ Institute.init(
     timestamps: false,
   }
 );
-
-// Institute.belongsTo(Course, { foreignKey: "course_id" , onUpdate: "CASCADE" });
-// Institute.belongsTo(Student, {foreignKey: "student_id" , onUpdate: "CASCADE"});
 
 export default Institute;

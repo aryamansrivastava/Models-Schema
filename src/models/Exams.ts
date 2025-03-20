@@ -1,8 +1,28 @@
-import { DataTypes, Model } from "sequelize";
-import {sequelize} from "../config/database";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
+import { sequelize } from "../config/database";
 import Course from "./Course";
 
-class Exams extends Model {}
+class Exams extends Model<
+  InferAttributes<Exams>,
+  InferCreationAttributes<Exams>
+> {
+  declare id: number;
+  declare course_id: number;
+  declare subject: string;
+  declare marks: number;
+  declare date: Date;
+  declare duration: number;
+
+  static associate(models: any) {
+    Exams.belongsTo(models.Course, { foreignKey: "course_id" });
+    Exams.hasMany(models.Result, { foreignKey: "exam_id" });
+  }
+}
 
 Exams.init(
   {
@@ -15,13 +35,11 @@ Exams.init(
       onUpdate: "CASCADE",
     },
     subject: DataTypes.STRING,
-    marks: DataTypes.INTEGER ,
+    marks: DataTypes.INTEGER,
     date: DataTypes.DATE,
     duration: DataTypes.INTEGER,
   },
   { sequelize, modelName: "Exams" }
 );
-
-Exams.belongsTo(Course, { foreignKey: "course_id" });
 
 export default Exams;

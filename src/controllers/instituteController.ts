@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Institute from "../models/Institute";
+import Course from "../models/Course";
 
 export const getAllInstitutes = async (req: Request, res: Response) => {
   try {
@@ -12,12 +13,15 @@ export const getAllInstitutes = async (req: Request, res: Response) => {
 
 export const getInstituteById = async (req: Request, res: Response) => {
   try {
-    const institute = await Institute.findByPk(req.params.id);
+    const {id} = req.params;
+    const institute = await Institute.findOne({ where: { id },
+      include: [{ model: Course }],});
     if (!institute) {
         res.status(404).json({ error: "Institute not found" });
     return;}
     res.status(200).json(institute);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error fetching institute" });
   }
 };

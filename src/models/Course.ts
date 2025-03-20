@@ -1,9 +1,29 @@
-import { DataTypes, Model } from "sequelize";
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
 import { sequelize } from "../config/database";
-// import Department from "./Department";
 import Institute from "./Institute";
 
-class Course extends Model {}
+class Course extends Model<
+  InferAttributes<Course>,
+  InferCreationAttributes<Course>
+> {
+  declare id: number;
+  declare institute_id: number;
+  declare name: string;
+  declare fees: number;
+  declare duration: number;
+
+  static associate(models: any) {
+    Course.belongsTo(models.Institute, { foreignKey: "institute_id" });
+    Course.hasMany(models.Student, { foreignKey: "course_id" });
+    Course.hasMany(models.Exams, { foreignKey: "course_id" });
+    Course.hasMany(models.Faculty, { foreignKey: "course_id" });
+  }
+}
 
 Course.init(
   {
@@ -25,7 +45,7 @@ Course.init(
       type: DataTypes.STRING,
     },
     fees: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
     },
     duration: {
       type: DataTypes.INTEGER,
@@ -38,7 +58,5 @@ Course.init(
     timestamps: false,
   }
 );
-
-Course.belongsTo(Institute, { foreignKey: "institute_id" });
 
 export default Course;
