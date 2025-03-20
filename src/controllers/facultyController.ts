@@ -1,0 +1,65 @@
+import { Request, Response } from "express";
+import Faculty from "../models/Faculty";
+
+export const getAllFaculties = async (req: Request, res: Response) => {
+  try {
+    const faculties = await Faculty.findAll();
+    res.status(200).json(faculties);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching faculties" });
+  }
+};
+
+export const getFacultyById = async (req: Request, res: Response) => {
+  try {
+    const faculty = await Faculty.findByPk(req.params.id);
+    if (!faculty) {
+      res.status(404).json({ error: "Faculty not found" });
+      return;
+    }
+
+    res.status(200).json(faculty);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching faculty" });
+  }
+};
+
+export const createFaculty = async (req: Request, res: Response) => {
+  try {
+    const faculty = await Faculty.create(req.body);
+    res.status(201).json(faculty);
+  } catch (error) {
+    console.error("Error creating faculty:", error);
+    res.status(500).json({ error: "Error creating faculty" });
+  }
+};
+
+export const updateFaculty = async (req: Request, res: Response) => {
+  try {
+    const faculty = await Faculty.findByPk(req.params.id);
+    if (!faculty) {
+      res.status(404).json({ error: "Faculty not found" });
+      return;
+    }
+
+    await faculty.update(req.body);
+    res.status(200).json(faculty);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating faculty" });
+  }
+};
+
+export const deleteFaculty = async (req: Request, res: Response) => {
+  try {
+    const faculty = await Faculty.findByPk(req.params.id);
+    if (!faculty) {
+      res.status(404).json({ error: "Faculty not found" });
+      return;
+    }
+
+    await faculty.destroy();
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting faculty" });
+  }
+};
