@@ -9,19 +9,19 @@ import Student from "./Student";
 import Faculty from "./Faculty";
 
 class StudentAttendance extends Model<
-InferAttributes<StudentAttendance>,
-InferCreationAttributes<StudentAttendance>
+  InferAttributes<StudentAttendance>,
+  InferCreationAttributes<StudentAttendance>
 > {
-declare id: number;
-declare student_id: number;
-declare faculty_id: number;
-declare date: Date;
-declare status: number;
+  declare id: number;
+  declare student_id: number;
+  declare faculty_id: number;
+  declare date: Date;
+  declare status: number;
 
-static associate(models: any) {
-  StudentAttendance.belongsTo(models.Student, {foreignKey: "student_id"});
-  StudentAttendance.belongsTo(models.Faculty, {foreignKey: "faculty_id"});
-}
+  static associate(models: any) {
+    StudentAttendance.belongsTo(models.Student, { foreignKey: "student_id" });
+    StudentAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id" });
+  }
 }
 
 StudentAttendance.init(
@@ -51,7 +51,12 @@ StudentAttendance.init(
     date: { type: DataTypes.DATE, allowNull: false },
     status: DataTypes.TINYINT,
   },
-  { sequelize, modelName: "StudentAttendance", tableName: "StudentAttendances", timestamps:true}
+  {
+    sequelize,
+    modelName: "StudentAttendance",
+    tableName: "StudentAttendances",
+    timestamps: true,
+  }
 );
 
 export default StudentAttendance;

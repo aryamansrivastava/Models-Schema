@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Sequelize } from "sequelize";
 import Student from "../models/Student";
 import { Op } from "sequelize";
 import Course from "../models/Course";

@@ -15,6 +15,7 @@ import courseRoutes from "./routes/courseRoutes";
 import facultyRoutes from "./routes/facultyRoutes";
 import instituteRoutes from "./routes/instituteRoutes";
 import resultRoutes from "./routes/resultRoutes";
+import studentAttendanceRoutes from "./routes/studentAttendanceRoutes"
 
 const app = express();
 const PORT = 5000;
@@ -26,6 +27,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/faculties", facultyRoutes);
 app.use("/api/institutes", instituteRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/attendances", studentAttendanceRoutes);
 
 (async () => {
   try {

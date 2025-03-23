@@ -1,12 +1,46 @@
 import { Request, Response } from "express";
 import Institute from "../models/Institute";
 import Course from "../models/Course";
+import { Op } from "sequelize";
 
 export const getAllInstitutes = async (req: Request, res: Response) => {
   try {
-    const institutes = await Institute.findAll();
-    res.status(200).json(institutes);
+    const { page = 1, limit = 10, search = "", filter = "" } = req.query;
+
+    const pageNumber = Number(page);
+    const pageSize = Number(limit);
+
+    const searchFilter = search
+    ? {
+        [Op.or]: [
+          { name: { [Op.like]: `%${search}%` } },
+          { email: { [Op.like]: `%${search}%` } },
+        ],
+      }
+    : {};
+
+    const additionalFilter = filter
+      ? { established: { [Op.gte]: filter } } 
+      : {};
+
+      const { rows: institutes, count } = await Institute.findAndCountAll({
+        where: {
+          ...searchFilter,
+          ...additionalFilter,
+        },
+        limit: pageSize,
+        offset: (pageNumber - 1) * pageSize,
+        order: [["name", "ASC"]], 
+      });
+
+      res.status(200).json({
+        data: institutes,
+        total: count,
+        totalPages: Math.ceil(count / pageSize),
+        currentPage: pageNumber,
+      });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error fetching institutes" });
   }
 };

@@ -1,26 +1,44 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
+import StudentAttendance from "../models/StudentAttendance";
+import Student from "../models/Student";
 import Course from "../models/Course";
 import Faculty from "../models/Faculty";
-import Student from "../models/Student";
-import StudentAttendance from "../models/StudentAttendance";
 
-export const getStudentAttendanceById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const attendance = await StudentAttendance.findOne({
-            where: { id },
-            include: [
-                { model: Student }, 
-                { model: Course }, 
-                { model: Faculty }, 
-            ],
-        });
+export const getStudentAttendancesByInstitute = async (req: Request, res: Response) => {
+  try {
+    const { instituteId } = req.params;
+    const { startDate, endDate } = req.query;
 
-        if (!attendance) {
-            return res.status(404).json({ message: "Attendance record not found" });
-        }
-        res.json(attendance);
-    } catch (error:any) {
-        res.status(500).json({ error: error.message });
-    }
+    const dateFilter = startDate && endDate ? {
+      date: {
+        [Op.between]: [new Date(startDate as string), new Date(endDate as string)]
+      }
+    } : {};
+
+    const attendances = await StudentAttendance.findAll({
+      where: { ...dateFilter },
+      include: [
+        {
+          model: Student,
+          required: true,
+          include: [
+            {
+              model: Course,
+              required: true,
+              where: { institute_id: instituteId },
+            }
+          ],
+        },
+        {
+          model: Faculty,
+        },
+      ],
+      order: [['date', 'ASC']],
+    });
+    res.status(200).json(attendances);
+  } catch (error: any) {
+    console.error("Error fetching student attendances:", error);
+    res.status(500).json({ error: "Error fetching student attendances", message: error.message });
+  }
 };
