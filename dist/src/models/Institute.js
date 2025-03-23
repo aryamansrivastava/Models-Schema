@@ -10,7 +10,7 @@ Institute.init({
     email: { type: sequelize_1.DataTypes.STRING, unique: true, allowNull: false },
     address: { type: sequelize_1.DataTypes.TEXT },
     website: { type: sequelize_1.DataTypes.STRING },
-    contact_No: { type: sequelize_1.DataTypes.STRING },
+    contact: { type: sequelize_1.DataTypes.STRING },
     affiliation: { type: sequelize_1.DataTypes.STRING },
     established: { type: sequelize_1.DataTypes.DATE },
 }, {

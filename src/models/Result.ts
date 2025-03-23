@@ -6,8 +6,8 @@ import {
 } from "sequelize";
 import { sequelize } from "../config/database";
 import Student from "./Student";
-import Course from "./Course";
-import Exams from "./Exams";
+import Exam from "./Exam";
+import Faculty from "./Faculty";
 
 class Result extends Model<
   InferAttributes<Result>,
@@ -15,8 +15,8 @@ class Result extends Model<
 > {
   declare id: number;
   declare student_id: number;
-  declare course_id: number;
   declare exam_id: number;
+  declare faculty_id: number;
   declare marks: number;
   declare result_Date: Date;
   declare cgpa: number;
@@ -24,7 +24,7 @@ class Result extends Model<
   static associate(models: any) {
     Result.belongsTo(models.Student, { foreignKey: "student_id" });
     Result.belongsTo(models.Course, { foreignKey: "course_id" });
-    Result.belongsTo(models.Exams, { foreignKey: "exam_id" });
+    Result.belongsTo(models.Exam, { foreignKey: "exam_id" });
   }
 }
 
@@ -39,27 +39,19 @@ Result.init(
         key: "id",
       },
       onDelete: "CASCADE",
-      onUpdate: "CASCADE",
-    },
-    course_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Course,
-        key: "id",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
     },
     exam_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Exams,
+        model: Exam,
         key: "id",
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+    },
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Faculty, key: "id" },
     },
     marks: DataTypes.INTEGER,
     result_Date: DataTypes.DATE,

@@ -20,7 +20,7 @@ import {
 
   static associate(models: any) {
     Student.belongsTo(models.Course, {foreignKey: "course_id"});
-    Student.belongsTo(models.Result, { foreignKey: "student_id" });
+    Student.hasMany(models.Result, { foreignKey: "student_id" });
     Student.hasMany(models.StudentAttendance, { foreignKey: "student_id" });
   }
 }
@@ -54,7 +54,7 @@ import {
         allowNull: false,
       },
     },
-    {sequelize, modelName: "Student", tableName: "Students"}
+    {sequelize, modelName: "Student", tableName: "Students",}
   );
 
   export default Student;

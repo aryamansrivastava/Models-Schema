@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/", getAllInstitutes);
 router.get("/:id", getInstituteById);
 router.post("/", createInstitute);
-router.put("/:id", updateInstitute);
+router.patch("/:id", updateInstitute);
 router.delete("/:id", deleteInstitute);
 
 export default router;

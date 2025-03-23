@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Course from "../models/Course";
-import Exams from "../models/Exams";
+import Exam from "../models/Exam";
 import Faculty from "../models/Faculty";
 import Institute from "../models/Institute";
 import Student from "../models/Student";
@@ -24,26 +24,63 @@ export const createCourse = async (req: Request, res: Response) => {
   }
 };
 
+export const getCoursesByInstitute = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log("Received Institute ID:", id);
+
+    if (isNaN(Number(id))) {
+      console.error("Invalid Institute ID:", id);
+      res.status(400).json({ error: "Invalid institute ID" });
+      return;
+    }
+
+    const institute = await Institute.findByPk(id);
+    if (!institute) {
+      console.error("Institute not found with ID:", id);
+      res.status(404).json({ error: "Institute not found" });
+      return;
+    }
+
+    const courses = await Course.findAll({
+      where: { institute_id: id },
+    });
+
+    if (courses.length === 0) {
+      console.warn("No courses found for institute ID:", id);
+      res.status(404).json({ message: "No courses found for this institute" });
+      return;
+    }
+
+    console.log("Fetched Courses:", courses);
+    res.json(courses);
+  } catch (error) {
+    console.error("Error fetching courses by institute:", error);
+    res.status(500).json({ error: "Error fetching courses" });
+  }
+};
+
 export const getCourseById = async (req: Request, res: Response) => {
   try {
-      const { id } = req.params;
-      const course = await Course.findOne({
-          where: { id },
-          include: [
-              { model: Institute },  
-              { model: Faculty },    
-              { model: Student },    
-              { model: Exams },      
-          ],
-      });
+    const { id } = req.params;
+    if (isNaN(Number(id))) {
+      res.status(400).json({ error: "Invalid course ID" });
+      return;
+    }
 
-      if (!course) {
-          res.status(404).json({ message: "Course not found" });
-          return;
-      }
+    const course = await Course.findOne({
+      where: { id },
+      include: [{ model: Institute }, { model: Faculty }, { model: Student }, { model: Exam }],
+    });
 
-      res.json(course);
+    if (!course) {
+      res.status(404).json({ message: "Course not found" });
+      return;
+    }
+
+    res.json(course);
   } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    console.error("Error fetching course by ID:", error);
+    res.status(500).json({ error: error.message || "Error fetching course" });
   }
 };

@@ -28,6 +28,7 @@ class Faculty extends Model<
     Faculty.belongsTo(models.Institute, { foreignKey: "institute_id" });
     Faculty.hasMany(models.FacultyAttendance, { foreignKey: "faculty_id" });
     Faculty.hasMany(models.Result, { foreignKey: "faculty_id" });
+    Faculty.hasMany(models.StudentAttendance, { foreignKey: "faculty_id" });
   }
 }
 
@@ -38,13 +39,10 @@ Faculty.init(
       type: DataTypes.INTEGER,
       references: { model: Course, key: "id" },
       onDelete: "CASCADE",
-      onUpdate: "CASCADE",
     },
     institute_id: {
       type: DataTypes.INTEGER,
       references: { model: Institute, key: "id" },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
     },
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -61,10 +59,5 @@ Faculty.init(
     timestamps: false,
   }
 );
-
-// Faculty.belongsTo(Course, { foreignKey: "course_id" });
-// Faculty.belongsTo(Institute, { foreignKey: "institute_id" });
-// Faculty.hasMany(FacultyAttendance, { foreignKey: "faculty_id" });
-// Faculty.hasMany(Result, { foreignKey: "faculty_id" });
 
 export default Faculty;

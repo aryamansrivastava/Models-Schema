@@ -7,9 +7,9 @@ import {
 import { sequelize } from "../config/database";
 import Course from "./Course";
 
-class Exams extends Model<
-  InferAttributes<Exams>,
-  InferCreationAttributes<Exams>
+class Exam extends Model<
+  InferAttributes<Exam>,
+  InferCreationAttributes<Exam>
 > {
   declare id: number;
   declare course_id: number;
@@ -19,12 +19,12 @@ class Exams extends Model<
   declare duration: number;
 
   static associate(models: any) {
-    Exams.belongsTo(models.Course, { foreignKey: "course_id" });
-    Exams.hasMany(models.Result, { foreignKey: "exam_id" });
+    Exam.belongsTo(models.Course, { foreignKey: "course_id" });
+    Exam.hasMany(models.Result, { foreignKey: "exam_id" });
   }
 }
 
-Exams.init(
+Exam.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     course_id: {
@@ -39,7 +39,7 @@ Exams.init(
     date: DataTypes.DATE,
     duration: DataTypes.INTEGER,
   },
-  { sequelize, modelName: "Exams" }
+  { sequelize, modelName: "Exam", tableName: "Exams"}
 );
 
-export default Exams;
+export default Exam;

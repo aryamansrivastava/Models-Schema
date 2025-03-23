@@ -14,9 +14,8 @@ class Institute extends Model<
   declare name: string;
   declare email: string;
   declare address: Text;
+  declare contact: string;
   declare website: string;
-  declare contact_No: string;
-  declare affiliation: string;
   declare established: Date;
 
   static associate(models: any) {
@@ -35,9 +34,8 @@ Institute.init(
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
     address: DataTypes.TEXT,
+    contact: DataTypes.STRING,
     website: DataTypes.STRING,
-    contact_No: DataTypes.STRING,
-    affiliation: DataTypes.STRING,
     established: DataTypes.DATE,
   },
   {

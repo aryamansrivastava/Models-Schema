@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Exams from "../models/Exams";
+import Exam from "../models/Exam";
 import Faculty from "../models/Faculty";
 import Result from "../models/Result";
 import Student from "../models/Student";
@@ -11,7 +11,7 @@ export const getResultById = async (req: Request, res: Response) => {
             where: { id },
             include: [
                 { model: Student }, 
-                { model: Exams }, 
+                { model: Exam }, 
                 { model: Faculty }, 
             ],
         });

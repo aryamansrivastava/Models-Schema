@@ -8,7 +8,7 @@ import "./models/StudentAttendance"
 import "./models/FacultyAttendance"
 import "./models/Institute"
 import "./models/Result"
-import "./models/Exams"
+import "./models/Exam"
 
 import studentRoutes from "./routes/studentRoutes";
 import courseRoutes from "./routes/courseRoutes";
