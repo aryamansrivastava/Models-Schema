@@ -6,6 +6,7 @@ import {
 } from "sequelize";
 import { sequelize } from "../config/database";
 import Institute from "./Institute";
+import db from "../models/index";
 
 class Course extends Model<
   InferAttributes<Course>,
@@ -18,10 +19,10 @@ class Course extends Model<
   declare duration: number;
 
   static associate(models: any) {
-    Course.belongsTo(models.Institute, { foreignKey: "institute_id" });
-    Course.hasMany(models.Student, { foreignKey: "course_id" });
-    Course.hasMany(models.Exam, { foreignKey: "course_id" });
-    Course.hasMany(models.Faculty, { foreignKey: "course_id" });
+    Course.belongsTo(models.Institute, { foreignKey: "institute_id", as:"institute"});
+    Course.hasMany(models.Student, { foreignKey: "course_id", as:"students" });
+    Course.hasMany(models.Exam, { foreignKey: "course_id", as:"exams"});
+    Course.hasMany(models.Faculty, { foreignKey: "course_id", as:"faculty" });
   }
 }
 

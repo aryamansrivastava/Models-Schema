@@ -5,8 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const database_1 = require("../config/database");
-const Department_1 = __importDefault(require("./Department"));
+const Institute_1 = __importDefault(require("./Institute"));
 class Course extends sequelize_1.Model {
+    static associate(models) {
+        Course.belongsTo(models.Institute, { foreignKey: "institute_id" });
+        Course.hasMany(models.Student, { foreignKey: "course_id" });
+        Course.hasMany(models.Exam, { foreignKey: "course_id" });
+        Course.hasMany(models.Faculty, { foreignKey: "course_id" });
+    }
 }
 Course.init({
     id: {
@@ -14,23 +20,22 @@ Course.init({
         autoIncrement: true,
         primaryKey: true,
     },
-    Department_id: {
+    institute_id: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {
-            model: Department_1.default,
+            model: Institute_1.default,
             key: "id",
         },
-    },
-    Course_id: {
-        type: sequelize_1.DataTypes.INTEGER,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
     },
     name: {
         type: sequelize_1.DataTypes.STRING,
     },
-    Fees: {
-        type: sequelize_1.DataTypes.BIGINT,
+    fees: {
+        type: sequelize_1.DataTypes.INTEGER,
     },
-    Duration: {
+    duration: {
         type: sequelize_1.DataTypes.INTEGER,
     },
 }, {
@@ -39,5 +44,4 @@ Course.init({
     tableName: "Courses",
     timestamps: false,
 });
-Course.belongsTo(Department_1.default, { foreignKey: "Department_id" });
 exports.default = Course;

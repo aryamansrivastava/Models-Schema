@@ -19,8 +19,8 @@ class Institute extends Model<
   declare established: Date;
 
   static associate(models: any) {
-    Institute.hasMany(models.Course, { foreignKey: "institute_id" });
-    Institute.hasMany(models.Faculty, { foreignKey: "institute_id" });
+    Institute.hasMany(models.Course, { foreignKey: "institute_id", as: "courses" });
+    Institute.hasMany(models.Faculty, { foreignKey: "institute_id", as: "faculties" });
   }
 }
 

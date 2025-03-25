@@ -3,6 +3,6 @@ import { getStudentAttendancesByInstitute } from "../controllers/StudentAttendan
 
 const router = express.Router();
 
-router.get("/institute/:instituteId", getStudentAttendancesByInstitute);
+router.get("/", getStudentAttendancesByInstitute);
 
 export default router;

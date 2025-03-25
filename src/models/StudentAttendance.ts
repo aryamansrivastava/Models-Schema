@@ -7,6 +7,7 @@ import {
 import { sequelize } from "../config/database";
 import Student from "./Student";
 import Faculty from "./Faculty";
+import db from "../models/index";
 
 class StudentAttendance extends Model<
   InferAttributes<StudentAttendance>,
@@ -19,8 +20,8 @@ class StudentAttendance extends Model<
   declare status: number;
 
   static associate(models: any) {
-    StudentAttendance.belongsTo(models.Student, { foreignKey: "student_id" });
-    StudentAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id" });
+    StudentAttendance.belongsTo(models.Student, { foreignKey: "student_id", as: "student" });
+    StudentAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id", as: "faculty" });
   }
 }
 

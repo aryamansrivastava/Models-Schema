@@ -22,9 +22,9 @@ class Result extends Model<
   declare cgpa: number;
 
   static associate(models: any) {
-    Result.belongsTo(models.Student, { foreignKey: "student_id" });
-    Result.belongsTo(models.Course, { foreignKey: "course_id" });
-    Result.belongsTo(models.Exam, { foreignKey: "exam_id" });
+    Result.belongsTo(models.Student, { foreignKey: "student_id", as: "student" }); 
+    Result.belongsTo(models.Exam, { foreignKey: "exam_id", as: "exam" });
+    Result.belongsTo(models.Faculty, { foreignKey: "faculty_id", as: "faculty" });
   }
 }
 

@@ -1,5 +1,6 @@
 import { sequelize } from "./config/database"
 import express from "express"
+import cors from "cors";
 
 import "./models/Course"
 import "./models/Faculty"
@@ -19,6 +20,14 @@ import studentAttendanceRoutes from "./routes/studentAttendanceRoutes"
 
 const app = express();
 const PORT = 5000;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    allowedHeaders: ["Content-Type", "Authorization"], 
+  })
+);
 
 app.use(express.json());
 

@@ -6,19 +6,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const database_1 = require("../config/database");
 const Faculty_1 = __importDefault(require("./Faculty"));
-const Course_1 = __importDefault(require("./Course"));
 class FacultyAttendance extends sequelize_1.Model {
+    static associate(models) {
+        FacultyAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id" });
+    }
 }
 FacultyAttendance.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
     },
-    student_id: sequelize_1.DataTypes.INTEGER,
-    Course_id: sequelize_1.DataTypes.INTEGER,
-    data: sequelize_1.DataTypes.DATE,
-    status: sequelize_1.DataTypes.ENUM("Present", "Absent"),
-}, { sequelize: database_1.sequelize, modelName: "StudentAttendance" });
-FacultyAttendance.belongsTo(Faculty_1.default, { foreignKey: "faculty_id" });
-FacultyAttendance.belongsTo(Course_1.default, { foreignKey: "Course_id" });
+    faculty_id: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Faculty_1.default,
+            key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    },
+    date: sequelize_1.DataTypes.DATE,
+    status: sequelize_1.DataTypes.TINYINT,
+}, { sequelize: database_1.sequelize, modelName: "FacultyAttendance", tableName: "FacultyAttendances", timestamps: true });
 exports.default = FacultyAttendance;

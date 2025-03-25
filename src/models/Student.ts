@@ -19,9 +19,9 @@ import {
   declare cgpa: number;
 
   static associate(models: any) {
-    Student.belongsTo(models.Course, {foreignKey: "course_id"});
-    Student.hasMany(models.Result, { foreignKey: "student_id" });
-    Student.hasMany(models.StudentAttendance, { foreignKey: "student_id" });
+    Student.belongsTo(models.Course, {foreignKey: "course_id", as: "course"});
+    Student.hasMany(models.Result, { foreignKey: "student_id", as : "results" }); 
+    Student.hasMany(models.StudentAttendance, { foreignKey: "student_id" as "attendances" });
   }
 }
 
