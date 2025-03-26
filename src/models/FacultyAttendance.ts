@@ -17,7 +17,7 @@ class FacultyAttendance extends Model<
   declare status: number;
 
   static associate(models: any) {
-    FacultyAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id" });
+    FacultyAttendance.belongsTo(models.Faculty, { foreignKey: "faculty_id", as: "faculty"});
   }
 }
 
@@ -36,7 +36,7 @@ FacultyAttendance.init(
         key: "id",
       },
       onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      // onUpdate: "CASCADE",
     },
     date: DataTypes.DATE,
     status: DataTypes.TINYINT,

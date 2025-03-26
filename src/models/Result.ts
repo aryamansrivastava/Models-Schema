@@ -24,7 +24,7 @@ class Result extends Model<
   static associate(models: any) {
     Result.belongsTo(models.Student, { foreignKey: "student_id", as: "student" }); 
     Result.belongsTo(models.Exam, { foreignKey: "exam_id", as: "exam" });
-    Result.belongsTo(models.Faculty, { foreignKey: "faculty_id", as: "faculty" });
+    Result.belongsTo(models.Faculty, { foreignKey: "faculty_id", as: "faculties" });
   }
 }
 

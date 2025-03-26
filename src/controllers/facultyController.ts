@@ -16,7 +16,7 @@ export const getAllFaculties = async (req: Request, res: Response) => {
 export const getFacultyById = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
-    const faculty = await Faculty.findOne({
+    const faculty = await Faculty.findAll({
       where: { id },
       include: [
           { model: Course },           
@@ -30,6 +30,33 @@ export const getFacultyById = async (req: Request, res: Response) => {
     }
 
     res.status(200).json(faculty);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching faculty" });
+  }
+};
+
+
+export const getFacultiesByInstitute = async (req: Request, res: Response) => {
+  try {
+    const {instituteId} = req.params;
+    if(!instituteId){
+      res.status(400).json({ error: "Institute ID is required" });
+      return;
+    }
+    const faculty = await Faculty.findAll({
+      where: { institute_id: instituteId },
+    });
+    const totalFaculty = await Faculty.count({
+      where: { institute_id: instituteId },
+    });
+    
+    if (!faculty) {
+      res.status(404).json({ error: "Faculty not found" });
+      return;
+    }
+
+    res.status(200).json({faculty,totalFaculty});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching faculty" });

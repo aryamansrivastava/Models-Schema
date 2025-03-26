@@ -51,8 +51,6 @@ export const getCoursesByInstitute = async (req: Request, res: Response) => {
       res.status(404).json({ message: "No courses found for this institute" });
       return;
     }
-
-    console.log("Fetched Courses:", courses);
     res.json(courses);
   } catch (error) {
     console.error("Error fetching courses by institute:", error);

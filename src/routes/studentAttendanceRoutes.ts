@@ -1,8 +1,10 @@
 import express from "express";
-import { getStudentAttendancesByInstitute } from "../controllers/StudentAttendance";
+import { getAttendanceByInstitute, getFacultyByInstitute } from "../controllers/StudentAttendance";
 
 const router = express.Router();
 
-router.get("/", getStudentAttendancesByInstitute);
+router.get("/:instituteId",  getAttendanceByInstitute);
+
+router.get("/faculty/:instituteId", getFacultyByInstitute);
 
 export default router;
