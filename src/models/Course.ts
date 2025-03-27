@@ -12,6 +12,7 @@ class Course extends Model<
   InferAttributes<Course>,
   InferCreationAttributes<Course>
 > {
+  [x: string]: any;
   declare id: number;
   declare institute_id: number;
   declare name: string;
