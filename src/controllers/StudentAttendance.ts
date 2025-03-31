@@ -58,6 +58,7 @@ export const getAttendanceByInstitute = async (req: Request, res: Response) => {
           {
             model: Student,
             as: "student",
+            // attributes: ["id", "name"],
             include: [
               {
                 model: Course,
@@ -65,11 +66,14 @@ export const getAttendanceByInstitute = async (req: Request, res: Response) => {
                 where: {
                   institute_id: instituteId,
                 },
+                required: true
               },
             ],
+            required:true
           },
         ],
         order: [["date", "ASC"]],
+        logging: console.log
       });
 
     const facultyAttendance = await FacultyAttendance.findAll({
