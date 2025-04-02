@@ -32,24 +32,24 @@ export const getFacultyByInstitute = async (req: Request, res: Response) => {
 export const getAttendanceByInstitute = async (req: Request, res: Response) => {
   try {
     const { instituteId } = req.params;
-    const { startDate, endDate } = req.query;
+    const { month, year } = req.query;
 
     if (!instituteId) {
       res.status(400).json({ error: "Institute ID is required" });
       return;
     }
 
-    const dateFilter =
-      startDate && endDate
-        ? {
-            date: {
-              [Op.between]: [
-                new Date(startDate as string),
-                new Date(endDate as string),
-              ],
-            },
-          }
-        : {};
+    const selectedMonth = month ? parseInt(month as string) : new Date().getMonth() + 1;
+    const selectedYear = year ? parseInt(year as string) : new Date().getFullYear();
+
+    const firstDayOfMonth = new Date(selectedYear, selectedMonth - 1, 1);
+    const lastDayOfMonth = new Date(selectedYear, selectedMonth, 0);
+
+    const dateFilter = {
+      date: {
+        [Op.between]: [firstDayOfMonth, lastDayOfMonth],
+      },
+    };
 
     const studentAttendance: StudentAttendance[] =
       await StudentAttendance.findAll({
@@ -58,7 +58,6 @@ export const getAttendanceByInstitute = async (req: Request, res: Response) => {
           {
             model: Student,
             as: "student",
-            // attributes: ["id", "name"],
             include: [
               {
                 model: Course,
@@ -73,7 +72,6 @@ export const getAttendanceByInstitute = async (req: Request, res: Response) => {
           },
         ],
         order: [["date", "ASC"]],
-        logging: console.log
       });
 
     const facultyAttendance = await FacultyAttendance.findAll({
@@ -87,7 +85,7 @@ export const getAttendanceByInstitute = async (req: Request, res: Response) => {
       ],
       order: [["date", "ASC"]],
     });
-
+    
     res.status(200).json({ studentAttendance, facultyAttendance });
   } catch (error) {
     console.error("Error fetching institute attendance:", error);
