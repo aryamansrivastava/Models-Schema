@@ -11,34 +11,34 @@ export const getAllInstitutes = async (req: Request, res: Response) => {
     const pageSize = Number(limit);
 
     const searchFilter = search
-    ? {
-        [Op.or]: [
-          { name: { [Op.like]: `%${search}%` } },
-          { email: { [Op.like]: `%${search}%` } },
-        ],
-      }
-    : {};
-
-    const additionalFilter = filter
-      ? { established: { [Op.gte]: filter } } 
+      ? {
+          [Op.or]: [
+            { name: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+          ],
+        }
       : {};
 
-      const { rows: institutes, count } = await Institute.findAndCountAll({
-        where: {
-          ...searchFilter,
-          ...additionalFilter,
-        },
-        limit: pageSize,
-        offset: (pageNumber - 1) * pageSize,
-        order: [["name", "ASC"]], 
-      });
+    const additionalFilter = filter
+      ? { established: { [Op.gte]: filter } }
+      : {};
 
-      res.status(200).json({
-        data: institutes,
-        total: count,
-        totalPages: Math.ceil(count / pageSize),
-        currentPage: pageNumber,
-      });
+    const { rows: institutes, count } = await Institute.findAndCountAll({
+      where: {
+        ...searchFilter,
+        ...additionalFilter,
+      },
+      limit: pageSize,
+      offset: (pageNumber - 1) * pageSize,
+      order: [["name", "ASC"]],
+    });
+
+    res.status(200).json({
+      data: institutes,
+      total: count,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: pageNumber,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching institutes" });
@@ -47,12 +47,15 @@ export const getAllInstitutes = async (req: Request, res: Response) => {
 
 export const getInstituteById = async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
-    const institute = await Institute.findOne({ where: { id },
-      include: [{ model: Course }],});
+    const { id } = req.params;
+    const institute = await Institute.findOne({
+      where: { id },
+      include: [{ model: Course }],
+    });
     if (!institute) {
-        res.status(404).json({ error: "Institute not found" });
-    return;}
+      res.status(404).json({ error: "Institute not found" });
+      return;
+    }
     res.status(200).json(institute);
   } catch (error) {
     console.error(error);
@@ -73,8 +76,10 @@ export const createInstitute = async (req: Request, res: Response) => {
 export const updateInstitute = async (req: Request, res: Response) => {
   try {
     const institute = await Institute.findByPk(req.params.id);
-    if (!institute){res.status(404).json({ error: "Institute not found" });
-return;}
+    if (!institute) {
+      res.status(404).json({ error: "Institute not found" });
+      return;
+    }
 
     await institute.update(req.body);
     res.status(200).json(institute);
@@ -86,7 +91,10 @@ return;}
 export const deleteInstitute = async (req: Request, res: Response) => {
   try {
     const institute = await Institute.findByPk(req.params.id);
-    if (!institute) {res.status(404).json({ error: "Institute not found" });return;}
+    if (!institute) {
+      res.status(404).json({ error: "Institute not found" });
+      return;
+    }
 
     await institute.destroy();
     res.status(204).send();
