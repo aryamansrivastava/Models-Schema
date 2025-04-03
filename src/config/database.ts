@@ -1,10 +1,22 @@
-import {Sequelize} from 'sequelize';
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-export const sequelize = new Sequelize('MyDatabase','sa','Aryaman@1234', {
-    host: 'localhost',
-    dialect: 'mssql',
-    logging: false,
-});
+dotenv.config();
+
+export const sequelize = new Sequelize(
+    process.env.DB_NAME as string,
+    process.env.DB_USER as string,
+    process.env.DB_PASS as string,
+    {
+        host: process.env.DB_HOST,
+        dialect: 'mssql',
+        port: Number(process.env.DB_PORT),
+        logging: false,
+        dialectOptions: {
+            options: { encrypt: false }
+        }
+    }
+);
 
 export const dbConnection = async (): Promise<void> => {
     try {

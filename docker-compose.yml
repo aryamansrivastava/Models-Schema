@@ -5,22 +5,8 @@ services:
       - "5000:5000"
     environment:
       - NODE_ENV=development
-      - DB_HOST=mssql
+      - DB_HOST= 192.168.56.1
       - DB_USER=sa
       - DB_PASSWORD=Aryaman@1234
       - DB_NAME=MyDatabase
-    depends_on:
-      - mssql
-
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      SA_PASSWORD: "Aryaman@1234"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    volumes:
-      - mssql_data:/var/opt/mssql
-
-volumes:
-  mssql_data:
+    depends_on: [] 
